@@ -10,7 +10,7 @@
     <link href="/assets/css/footer.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../assets/css/game_match_list.css" rel="stylesheet">
-    <link href="/assets/css/mainChatbot.css" rel="stylesheet">
+    <link href="/assets/css/mainChatbot.css?v=20251119-2" rel="stylesheet">
 
     <style>
         body {
@@ -23,10 +23,16 @@
             transition: background-image 0.3s;
         }
         
-        /* 채팅창 활성화 시 배경 제거 */
+        /* 채팅창 활성화 시 배경 제거 + 스크롤 차단 */
         body.chat-active {
-            background-image: none;
-            background-color: #ffffff;
+            background-image: none !important;
+            background-color: #ffffff !important;
+            overflow: hidden !important;
+            position: fixed !important;
+            width: 100% !important;
+            height: 100% !important;
+            touch-action: none !important;
+            overscroll-behavior: none !important;
         }
     </style>
 </head>
@@ -103,11 +109,9 @@
         </div>
     </header>
     <main>
-        <section class="fc-chat" id="fcChat">
-            <div class="fc-chat__log" id="chatLog" aria-live="polite"></div>
-            <div class="fc-chat__input">
-                <input type="text" id="chatInput" placeholder="무엇이 궁금하신가요? (Enter 입력)">
-            </div>
+        <section id="fcChat">
+            <div id="chatLog" aria-live="polite"></div>
+            <input type="text" id="chatInput" placeholder="무엇이 궁금하신가요? (Enter 입력)">
         </section>
     </main>
 
@@ -165,8 +169,8 @@
 <script src="./assets/js/menubar.js"></script>
 <!-- 챗봇 엔터 키 이벤트 js -->
 <!-- <script src="./assets/js/chat.js"></script> -->
-<script type="module" src="/assets/js/aiCore.js" defer></script>
-<script type="module" src="/assets/js/main_chat.js" defer></script>
+<script type="module" src="/assets/js/aiCore.js?v=20251119-2" defer></script>
+<script type="module" src="/assets/js/main_chat.js?v=20251119-2" defer></script>
 
 
 

@@ -26,6 +26,8 @@
     max-width: 950px;
     z-index: 999;
     /* 메뉴바(보통 1000+)보다 낮게 설정 */
+    display: block !important;
+    visibility: visible !important;
 
     --gap: 10px;
     --barH: 48px;
@@ -63,12 +65,19 @@
        - 60vh = 화면 높이의 60%
        - 480px = 절대 최대 높이 (이 값을 늘리면 더 길어짐) */
 
-    overflow-y: auto;
-    /* ← 세로 스크롤 활성화 */
+    overflow-y: scroll;
+    /* ← 세로 스크롤 강제 활성화 */
     overflow-x: hidden;
     /* ← 가로 스크롤 숨김 */
     overscroll-behavior: contain;
     /* ← 스크롤이 밖으로 전파되지 않게 */
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    /* iOS 부드러운 터치 스크롤 */
+    touch-action: pan-y;
+    /* 세로 스크롤만 허용 */
+    pointer-events: auto;
+    /* 터치 이벤트 허용 */
 }
 
 #fcChat.active #chatLog {
@@ -83,6 +92,8 @@
     right: var(--gap);
     bottom: var(--gap);
     height: var(--barH);
+    display: block !important;
+    visibility: visible !important;
 
     /* 입력창 스타일 추가 */
     width: calc(100% - 2*var(--gap));
@@ -94,6 +105,7 @@
     outline: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
     transition: border-color .2s, box-shadow .2s;
+    z-index: 1;
 }
 
 #chatInput:focus {
@@ -171,23 +183,59 @@
         pointer-events: none !important;
     }
 
-    /* 챗봇 활성화 시 body 스크롤 방지 (키보드 대응) */
+    /* 챗봇 활성화 시 body 스크롤 방지 + 푸터 숨김 */
+    html.chat-active,
     body.chat-active {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-        height: 100%;
+        overflow: hidden !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        touch-action: none !important;
+        /* 모든 터치 제스처 차단 */
+        overscroll-behavior: none !important;
+        /* 스크롤 바운스 차단 */
+        -webkit-overflow-scrolling: auto !important;
+    }
+    
+    /* 채팅창은 항상 보이도록 */
+    body.chat-active #fcChat {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    body.chat-active footer {
+        display: none !important;
+        /* 채팅창 열리면 푸터 완전 숨김 */
     }
 
-    /* 모바일 키보드 대응 - 채팅창 높이 조정 */
+    /* 모바일 키보드 대응 - 채팅창 크기 고정 */
     #chatLog {
-        max-height: clamp(200px, 40vh, 350px);
-        /* 키보드 올라올 때를 대비해 최대 높이 줄임 */
+        height: 35vh !important;
+        /* 고정 높이 */
+        max-height: 300px !important;
+        min-height: 180px !important;
+        overflow-y: scroll !important;
+        /* 스크롤 강제 활성화 */
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        /* iOS 부드러운 스크롤 */
+        overscroll-behavior: contain !important;
+        /* 🔴 스크롤이 body로 전파되지 않게 */
+        overscroll-behavior-y: contain !important;
+        touch-action: pan-y !important;
+        /* 세로 스크롤만 허용 */
+        isolation: isolate !important;
+        /* 스크롤 컨텍스트 격리 */
     }
 
     /* iOS Safari 키보드 대응 */
     #chatInput {
-        font-size: 16px; /* iOS 자동 줌 방지 */
+        font-size: 16px;
+        /* iOS 자동 줌 방지 */
     }
 
     /* 메시지 버블 터치 영역 확보 */
@@ -195,8 +243,6 @@
         margin: 8px var(--fc-gap);
     }
 }
-
-/* body 스크롤은 전역에서 제어하지 않습니다. */
 
 /* 스크롤바 스타일 */
 #chatLog::-webkit-scrollbar,
